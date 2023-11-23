@@ -75,6 +75,21 @@ class Configuration implements ConfigurationInterface
                     ->requiresAtLeastOneElement()
                     ->prototype('scalar')->end()
                 ->end()
+                ->scalarNode('flag_deleted')
+                    ->info('Status flag to set when deleting translations')
+                    ->example('Obsolete')
+                    ->defaultNull()
+                ->end()
+                ->variableNode('import_parameters')
+                    ->info('URI Parameters to pass to import API call')
+                    ->defaultValue([])
+                    ->validate()
+                        ->ifTrue(function ($value) {
+                            return !\is_array($value);
+                        })
+                        ->thenInvalid('"import_parameters" must be an array.')
+                    ->end()
+                ->end()
             ->end()
         ->end();
 

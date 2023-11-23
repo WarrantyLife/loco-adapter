@@ -157,6 +157,13 @@ class Loco implements Storage, TransferableStorage
         $project = $this->getProject($domain);
 
         $this->client->translations()->delete($project->getApiKey(), $key, $locale);
+
+        // Local change for Warranty Life: flag deleted translations
+        // since the above call "untranslates" the asset in a given locale
+        // but keeps them around.
+        if($project->getFlagDeleted()) {
+            $this->client->translations()->flag($project->getApiKey(), $key, $locale, $project->getFlagDeleted());
+        }
     }
 
     /**
@@ -194,16 +201,18 @@ class Loco implements Storage, TransferableStorage
      */
     public function import(MessageCatalogueInterface $catalogue, array $options = []): void
     {
-        $locale = $catalogue->getLocale();
         foreach ($this->projects as $project) {
             foreach ($project->getDomains() as $domain) {
                 $data = XliffConverter::catalogueToContent($catalogue, $domain, $options);
+
                 $params = [
                     'locale' => 'target',
                     'format' => 'symfony',
                     'async' => 1,
                     'index' => $project->getIndexParameter(),
                 ];
+
+                $params += $project->getImportParameters();
 
                 if ($project->isMultiDomain()) {
                     $params['tag-all'] = $domain;

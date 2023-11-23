@@ -41,6 +41,11 @@ final class LocoProject
      */
     private $domains;
 
+    private $flagDeleted;
+
+    private $importParameters;
+
+
     public function __construct(string $name, array $config)
     {
         $this->name = $name;
@@ -48,6 +53,8 @@ final class LocoProject
         $this->status = $config['status'] ?? null;
         $this->indexParameter = $config['index_parameter'] ?? null;
         $this->domains = empty($config['domains']) ? [$name] : $config['domains'];
+        $this->flagDeleted = $config['flag_deleted'];
+        $this->importParameters = $config['import_parameters'];
     }
 
     public function getName(): string
@@ -87,4 +94,37 @@ final class LocoProject
     {
         return \count($this->domains) > 1;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFlagDeleted()
+    {
+        return $this->flagDeleted;
+    }
+
+    /**
+     * @param mixed $flagDeleted
+     */
+    public function setFlagDeleted($flagDeleted): void
+    {
+        $this->flagDeleted = $flagDeleted;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImportParameters()
+    {
+        return $this->importParameters;
+    }
+
+    /**
+     * @param mixed $importParameters
+     */
+    public function setImportParameters($importParameters): void
+    {
+        $this->importParameters = $importParameters;
+    }
+
 }
