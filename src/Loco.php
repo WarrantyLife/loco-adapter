@@ -203,6 +203,8 @@ class Loco implements Storage, TransferableStorage
     {
         foreach ($this->projects as $project) {
             foreach ($project->getDomains() as $domain) {
+                // local hack. I can't seem to find where $options gets picked up
+                $options['xliff_version'] = '1.2';
                 $data = XliffConverter::catalogueToContent($catalogue, $domain, $options);
 
                 $params = [
